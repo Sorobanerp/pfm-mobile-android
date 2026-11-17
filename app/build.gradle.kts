@@ -17,6 +17,8 @@ android {
         versionCode = 200
         versionName = "2.0.0"
 
+        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:18080/\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -31,6 +33,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
