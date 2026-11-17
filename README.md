@@ -10,6 +10,16 @@
 
 ---
 
+## Topologia de Portas Locais & Desenvolvimento com Emulador Android
+
+No ambiente de emulador Android (AVD), o host local é acessível via IP especial `10.0.2.2`. A aplicação consome a API através do Envoy Gateway:
+
+| Interface | URL Local (Host) | URL no Emulador Android | Configuração Gradle (`app/build.gradle.kts`) |
+|---|---|---|---|
+| **API Gateway Envoy** | `http://localhost:18080/` | `http://10.0.2.2:18080/` | `buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:18080/\"")` |
+
+---
+
 ## Estrutura de Diretórios Inicial
 
 ```text
