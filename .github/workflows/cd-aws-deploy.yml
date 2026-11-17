@@ -1,0 +1,37 @@
+name: CD AWS Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: cd-production-pfm-mobile-android
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Publicar artefato Android (production)
+    runs-on: ubuntu-latest
+    environment: production   # exige aprovação da GMUD (required reviewers)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.10.2"
+      - name: Build release
+        run: gradle --no-daemon assembleRelease
+      - name: Autenticar na AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Publicar artefato no S3
+        run: aws s3 cp app/build/outputs/apk/release/ "s3://${{ vars.MOBILE_ARTIFACTS_BUCKET }}/pfm-mobile-android/${{ github.sha }}/" --recursive
