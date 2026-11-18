@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 android {
@@ -29,6 +30,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "21"
+    }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 
     buildFeatures {
@@ -76,4 +81,28 @@ dependencies {
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+}
+
+// Kover coverage. Exclusions are deliberately narrow: only Android-framework-bound
+// Compose UI and generated code. NO business logic (domain, data, sync) is excluded.
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Compose screens/previews (need Android runtime / emulator)
+                    "br.com.pfm.mobile.ui.ReceiptComposeScreensKt*",
+                    "br.com.pfm.mobile.ui.ComposableSingletons*",
+                    // Generated code
+                    "br.com.pfm.mobile.BuildConfig",
+                    "*_Impl*",
+                    "*_Factory*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    "dagger.hilt.internal.aggregatedroot.codegen.*",
+                    "hilt_aggregated_deps.*"
+                )
+            }
+        }
+    }
 }
