@@ -4,6 +4,8 @@ import br.com.pfm.mobile.data.local.room.PendingReceiptEntity
 import br.com.pfm.mobile.data.local.room.ReceiptDao
 import br.com.pfm.mobile.domain.SyncStatus
 import java.io.IOException
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 /**
  * Self-contained Unit Test Suite (`ReceiptSyncWorkerTest.kt`) validating:
@@ -35,7 +37,8 @@ class InMemoryReceiptDao : ReceiptDao {
 
 class ReceiptSyncWorkerTest {
 
-    suspend fun shouldPersistQrCodeOfflineUnder100msAndRetryExponentiallyThenReconcile() {
+    @Test
+    fun shouldPersistQrCodeOfflineUnder100msAndRetryExponentiallyThenReconcile() = runTest {
         val dao = InMemoryReceiptDao()
         var networkAvailable = false
 
