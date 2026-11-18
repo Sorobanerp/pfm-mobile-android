@@ -7,11 +7,13 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import br.com.pfm.mobile.data.local.room.PendingReceiptEntity
 import br.com.pfm.mobile.data.local.room.ReceiptDao
+import br.com.pfm.mobile.data.remote.TraceparentInterceptor
 import br.com.pfm.mobile.domain.PendingReceiptScan
 import br.com.pfm.mobile.domain.SyncStatus
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.system.measureTimeMillis
+import okhttp3.OkHttpClient
 
 /**
  * Gateway contract for posting pending NFC-e QR Code URLs to `POST /api/v1/receipts/nfce`
@@ -146,5 +148,8 @@ class ReceiptSyncWorkerCoordinator(
                     TimeUnit.SECONDS
                 )
                 .build()
+
+        fun buildSyncHttpClient(): OkHttpClient =
+            TraceparentInterceptor.buildTracedHttpClient()
     }
 }

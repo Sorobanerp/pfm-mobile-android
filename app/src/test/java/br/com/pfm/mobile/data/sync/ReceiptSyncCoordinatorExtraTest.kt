@@ -5,6 +5,7 @@ import androidx.work.NetworkType
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import br.com.pfm.mobile.data.remote.TraceparentInterceptor
 import br.com.pfm.mobile.domain.SyncStatus
 import java.io.IOException
 import kotlinx.coroutines.test.runTest
@@ -93,5 +94,11 @@ class ReceiptSyncCoordinatorExtraTest {
         val req = ReceiptSyncWorkerCoordinator.buildWorkRequest<DummyWorker>()
         assertEquals(NetworkType.CONNECTED, req.workSpec.constraints.requiredNetworkType)
         assertEquals(BackoffPolicy.EXPONENTIAL, req.workSpec.backoffPolicy)
+    }
+
+    @Test
+    fun syncHttpClientRegistersTraceparentInterceptor() {
+        val client = ReceiptSyncWorkerCoordinator.buildSyncHttpClient()
+        assertTrue(client.interceptors.any { it is TraceparentInterceptor })
     }
 }
