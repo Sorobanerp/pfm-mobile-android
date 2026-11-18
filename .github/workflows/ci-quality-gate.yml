@@ -47,9 +47,11 @@ jobs:
         with:
           gradle-version: "8.10.2"
       - name: Testes unitários e Kover XML
-        run: gradle --no-daemon testDebugUnitTest koverXmlReport
+        run: |
+          gradle --no-daemon testDebugUnitTest koverXmlReport
+          cp -f app/build/reports/kover/report.xml app/build/reports/kover/reportDebug.xml || true
       - name: Exigir cobertura >= 95%
-        run: python3 .github/scripts/check_coverage.py --format xml --file app/build/reports/kover/report.xml --min 95
+        run: python3 .github/scripts/check_coverage.py --format xml --file app/build/reports/kover/reportDebug.xml --min 95
       - name: SonarCloud (Quality Gate)
         uses: SonarSource/sonarqube-scan-action@v5
         env:
