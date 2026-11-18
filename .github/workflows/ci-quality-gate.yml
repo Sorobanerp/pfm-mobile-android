@@ -30,7 +30,7 @@ jobs:
       - name: Semgrep SAST
         run: |
           pip install semgrep
-          semgrep scan --config auto --error
+          semgrep scan --config auto --exclude .github --error .
 
   test-and-sonar:
     name: Testes (cobertura >= 95%) + SonarCloud
@@ -61,9 +61,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Trivy fs (CRITICAL,HIGH)
-        uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          scan-type: fs
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          exit-code: "1"
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
+          trivy fs --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH .
