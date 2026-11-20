@@ -3,6 +3,7 @@ package br.com.pfm.mobile
 import br.com.pfm.mobile.domain.FamilyMemberSummary
 import br.com.pfm.mobile.domain.FamilyRole
 import br.com.pfm.mobile.domain.PersonalInflationEvaluator
+import br.com.pfm.mobile.ui.theme.OrganicPulseColors
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -10,6 +11,16 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class FamilyProfileAndInflationTest {
+
+    @Test
+    fun `exposes shared Organic Financial Pulse color tokens`() {
+        assertEquals(androidx.compose.ui.graphics.Color(0xFF8CBA51), OrganicPulseColors.Primary)
+        assertTrue(OrganicPulseColors.LimeGlow != OrganicPulseColors.CoralCritical)
+        assertTrue(OrganicPulseColors.WarmPeach != OrganicPulseColors.Canvas)
+        assertTrue(OrganicPulseColors.Surface != OrganicPulseColors.Border)
+        assertTrue(OrganicPulseColors.DeepText != OrganicPulseColors.MutedText)
+        assertTrue(OrganicPulseColors.WarmPeachText != OrganicPulseColors.Primary)
+    }
 
     @Test
     fun `triggers personal inflation alert when EAN unit price increases above threshold`() {
