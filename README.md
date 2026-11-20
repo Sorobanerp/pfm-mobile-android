@@ -1,40 +1,63 @@
-# `pfm-mobile-android`
+# PFM Mobile Android — Kotlin Offline-First (Jetpack Compose)
 
-> **Repositório #12 da Topologia Oficial Multi-Repo (14 Repositórios) — PFM Core Banking (`Sorobanerp`)**
-
-- **Descrição**: PFM Core Banking — Offline-First Android App with QR Code NFC-e Scanner & Encrypted Sync Queue
-- **Stack Homologada (ADR-001)**: `Kotlin, Jetpack Compose, Room/SQLCipher, CameraX ML Kit`
-- **Arquitetura**: Hexagonal Architecture (Ports & Adapters) / Zero-Trust Multitenancy (ADR-006)
-- **Documentação Executiva, C4, ADRs, PRD & SRE**: [https://sorobanerp.github.io/pfm-docs/](https://sorobanerp.github.io/pfm-docs/)
-- **Repositório de Documentação**: [Sorobanerp/pfm-docs](https://github.com/Sorobanerp/pfm-docs)
+[![Gitflow](https://img.shields.io/badge/Gitflow-develop%20%7C%20main-indigo)](CONTRIBUTING.md)
+[![SemVer](https://img.shields.io/badge/SemVer-2.0.0-blue)](CHANGELOG.md)
+[![Docs](https://img.shields.io/badge/PFM%20Docs-V3.0-8CBA51)](https://sorobanerp.github.io/pfm-docs/)
 
 ---
 
-## Topologia de Portas Locais & Desenvolvimento com Emulador Android
+## 1. Visão Geral & Papel na Arquitetura
 
-No ambiente de emulador Android (AVD), o host local é acessível via IP especial `10.0.2.2`. A aplicação consome a API através do Envoy Gateway:
+Aplicativo Android nativo **Offline-First** em **Kotlin + Jetpack Compose + Room/SQLCipher + CameraX**: leitura instantânea de QR Code NFC-e sem internet, fila local criptografada e sincronização resiliente via WorkManager.
 
-| Interface | URL Local (Host) | URL no Emulador Android | Configuração Gradle (`app/build.gradle.kts`) |
-|---|---|---|---|
-| **API Gateway Envoy** | `http://localhost:18080/` | `http://10.0.2.2:18080/` | `buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:18080/\"")` |
+- **Repositório:** `Sorobanerp/pfm-mobile-android`
+- **Vínculo com `pfm-docs`:** `ADR-001, ADR-003, ADR-004 | US-07, US-14`
 
----
-
-## Estrutura de Diretórios Inicial
-
-```text
-pfm-mobile-android/
-├── app/src/main/java/io/sorobanerp/pfm/mobile/domain/
-├── app/src/main/java/io/sorobanerp/pfm/mobile/data/local/
-├── app/src/main/java/io/sorobanerp/pfm/mobile/ui/scanner/
-├── app/src/test/java/io/sorobanerp/pfm/mobile/
-└── README.md
+```mermaid
+flowchart LR
+    CAM["CameraX + ML Kit QR NFC-e"] --> ROOM["Room + SQLCipher (Offline-First)"]
+    ROOM -->|WorkManager Sync| BFF["Envoy / pfm-ingestion-bff-go"]
 ```
 
-## Governança & Contratos (DoR / DoD V2)
+---
 
-Consulte as especificações completas no portal de documentação:
-- [ADRs V2 (ADR-001 a ADR-007)](https://sorobanerp.github.io/pfm-docs/architecture/adrs/)
-- [Modelo C4 & Topologia de 14 Repositórios](https://sorobanerp.github.io/pfm-docs/architecture/c4-model/)
-- [PRD Core Banking & Regras RN01–RN06](https://sorobanerp.github.io/pfm-docs/product/prd-core-banking/)
-- [Backlog Scrum & Cenários BDD Gherkin](https://sorobanerp.github.io/pfm-docs/product/backlog-bdd/)
+## 2. Pré-requisitos & Variáveis de Ambiente
+
+### Pré-requisitos
+- JDK `17` / `21` e Android SDK (API 34+)
+- Gradle Wrapper (`./gradlew`)
+
+### Variáveis de Ambiente (Sem Segredos Hardcoded)
+| Variável / BuildConfig | Padrão Local | Descrição |
+| :--- | :---: | :--- |
+| `API_BASE_URL` | `http://10.0.2.2:18080/` | URL do Edge Gateway acessível pelo Emulador Android |
+
+> **Segurança (Zero-Trust):** Nunca commite tokens, senhas, chaves AWS ou strings de conexão com credenciais reais. Utilize `.env` local (ignorado no `.gitignore`) ou AWS Secrets Manager / GitHub OIDC.
+
+---
+
+## 3. Como Executar Localmente
+
+```bash
+./gradlew assembleDebug
+# Instalar no emulador conectado:
+./gradlew installDebug
+```
+
+---
+
+## 4. Como Testar e Validar
+
+```bash
+./gradlew testDebugUnitTest jacocoTestReport
+./gradlew lintDebug
+```
+
+---
+
+## 5. Como Provisionar / Validar na Nuvem
+
+1. Fluxo Gitflow: `feat/*` $\rightarrow$ `develop` $\rightarrow$ `release/vX.Y.Z` $\rightarrow$ `main`.
+2. O pipeline gera APK/AAB assinado e valida cobertura de testes $\ge 95\%$.
+
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) para regras de Conventional Commits e [CHANGELOG.md](CHANGELOG.md) para histórico de versões.
