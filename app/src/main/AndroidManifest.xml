@@ -8,6 +8,7 @@
 
     <application
         android:allowBackup="false"
+        android:usesCleartextTraffic="false"
         android:label="PFM Core Banking Mobile"
         android:supportsRtl="true">
     </application>
