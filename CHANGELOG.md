@@ -7,6 +7,8 @@ Todas as alterações notáveis neste repositório são documentadas neste arqui
 ## [Unreleased]
 
 ### Added
+- Tema Material 3 **Organic Financial Pulse** (`Color.kt` + `Theme.kt`) com paridade de tokens Web & Android (`#8CBA51`, `#DEFF8B`, `#FBCEB5`, `#FF5D6C`, `#F7F9F5`).
+- Modelos e tela Compose offline-first para **Alerta de Inflação Pessoal por EAN (`US-11`)** e **Gestão de Perfil Familiar RBAC (`US-13`)** com testes unitários (`FamilyProfileAndInflationTest.kt`).
 - Padronização de governança DevEx (`README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`) e workflow de validação de **Conventional Commits** em Pull Requests para `develop` e `main`.
 
 ---
