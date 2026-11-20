@@ -53,7 +53,7 @@ jobs:
       - name: Exigir cobertura >= 95%
         run: python3 .github/scripts/check_coverage.py --format xml --file app/build/reports/kover/reportDebug.xml --min 95
       - name: SonarCloud (Quality Gate)
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
