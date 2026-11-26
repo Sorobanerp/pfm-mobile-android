@@ -92,6 +92,8 @@ kover {
                 classes(
                     // Compose screens/previews (need Android runtime / emulator)
                     "br.com.pfm.mobile.ui.ReceiptComposeScreensKt*",
+                    "br.com.pfm.mobile.ui.FamilyProfileAndInflationScreenKt*",
+                    "br.com.pfm.mobile.ui.theme.ThemeKt*",
                     "br.com.pfm.mobile.ui.ComposableSingletons*",
                     // Generated code
                     "br.com.pfm.mobile.BuildConfig",
